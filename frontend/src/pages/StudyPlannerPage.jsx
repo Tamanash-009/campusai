@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Calendar, Plus, Trash2, Download } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Calendar, Plus, Trash2, Download, Sparkles, ArrowRight, Clock, BookOpen } from 'lucide-react'
 import { api } from '../utils/api'
 
 export default function StudyPlannerPage() {
@@ -40,98 +41,213 @@ export default function StudyPlannerPage() {
     setLoading(false)
   }
 
+  const colors = ['from-cyan-500 to-blue-500', 'from-purple-500 to-pink-500', 'from-indigo-500 to-purple-500', 'from-emerald-500 to-teal-500', 'from-amber-500 to-orange-500']
+
   return (
     <div className="max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Study Planner</h1>
-
-      <div className="bg-gray-800 rounded-xl p-6 mb-6">
-        <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-          <Calendar size={20} />
-          Your Subjects
-        </h2>
-        <div className="space-y-2 mb-4">
-          {subjects.map((s, i) => (
-            <div key={i} className="flex gap-2">
-              <input
-                type="text"
-                value={s}
-                onChange={(e) => updateSubject(i, e.target.value)}
-                placeholder="Subject name"
-                className="flex-1 bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-indigo-500"
-              />
-              {subjects.length > 1 && (
-                <button onClick={() => removeSubject(i)} className="text-red-400 hover:text-red-300 p-2">
-                  <Trash2 size={20} />
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
-        <button onClick={addSubject} className="text-indigo-400 hover:text-indigo-300 flex items-center gap-1 text-sm">
-          <Plus size={16} /> Add Subject
-        </button>
-      </div>
-
-      <div className="bg-gray-800 rounded-xl p-6 mb-6">
-        <h2 className="text-lg font-semibold mb-4">Exam Schedule</h2>
-        <div className="space-y-3 mb-4">
-          {exams.map((exam, i) => (
-            <div key={i} className="flex gap-3 items-center">
-              <input
-                type="text"
-                value={exam.name}
-                onChange={(e) => updateExam(i, 'name', e.target.value)}
-                placeholder="Exam name"
-                className="flex-1 bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-indigo-500"
-              />
-              <input
-                type="date"
-                value={exam.date}
-                onChange={(e) => updateExam(i, 'date', e.target.value)}
-                className="bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-indigo-500"
-              />
-              {exams.length > 1 && (
-                <button onClick={() => removeExam(i)} className="text-red-400 hover:text-red-300 p-2">
-                  <Trash2 size={20} />
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
-        <button onClick={addExam} className="text-indigo-400 hover:text-indigo-300 flex items-center gap-1 text-sm">
-          <Plus size={16} /> Add Exam
-        </button>
-      </div>
-
-      <button
-        onClick={generatePlan}
-        disabled={loading || !subjects.some(s => s.trim()) || !exams.some(e => e.name && e.date)}
-        className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-600 text-white font-medium py-3 rounded-lg transition-colors mb-6"
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
       >
-        {loading ? 'Generating plan...' : 'Generate Study Plan'}
-      </button>
-
-      {schedule && (
-        <div className="bg-gray-800 rounded-xl p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Your Study Schedule</h2>
-            <button className="flex items-center gap-2 text-indigo-400 hover:text-indigo-300">
-              <Download size={18} /> Export Calendar
-            </button>
-          </div>
-          <p className="text-gray-400 mb-4">{schedule.summary}</p>
-          <div className="space-y-2">
-            {schedule.schedule?.slice(0, 14).map((item, i) => (
-              <div key={i} className="flex items-center gap-4 p-3 bg-gray-700 rounded-lg">
-                <span className="text-sm text-gray-400 w-24">{item.date}</span>
-                <span className="font-medium text-indigo-400">{item.subject}</span>
-                <span className="text-gray-300 flex-1">{item.topics}</span>
-                <span className="text-sm text-gray-400">{item.duration}</span>
-              </div>
-            ))}
-          </div>
+        <div className="text-center mb-8">
+          <motion.div
+            className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 via-blue-500 to-indigo-500 flex items-center justify-center mx-auto mb-4"
+            whileHover={{ scale: 1.1, rotate: 5 }}
+          >
+            <Calendar className="text-white" size={32} />
+          </motion.div>
+          <h1 className="text-3xl font-bold gradient-text mb-2">Study Planner</h1>
+          <p className="text-gray-400">AI-powered personalized study schedules</p>
         </div>
-      )}
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <motion.div 
+            className="glass rounded-3xl p-6 border border-white/10"
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center">
+                <BookOpen className="text-white" size={20} />
+              </div>
+              <h2 className="text-lg font-bold text-white">Your Subjects</h2>
+            </div>
+            <div className="space-y-3 mb-4">
+              {subjects.map((s, i) => (
+                <motion.div 
+                  key={i} 
+                  className="flex gap-2"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                >
+                  <input
+                    type="text"
+                    value={s}
+                    onChange={(e) => updateSubject(i, e.target.value)}
+                    placeholder="Subject name"
+                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20 transition-all"
+                  />
+                  {subjects.length > 1 && (
+                    <motion.button 
+                      onClick={() => removeSubject(i)} 
+                      className="p-3 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-400 transition-colors"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Trash2 size={18} />
+                    </motion.button>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+            <motion.button 
+              onClick={addSubject} 
+              className="flex items-center gap-2 text-cyan-400 hover:text-cyan-300 text-sm font-medium"
+              whileHover={{ x: 5 }}
+            >
+              <Plus size={16} /> Add Subject
+            </motion.button>
+          </motion.div>
+
+          <motion.div 
+            className="glass rounded-3xl p-6 border border-white/10"
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.15 }}
+          >
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                <Clock className="text-white" size={20} />
+              </div>
+              <h2 className="text-lg font-bold text-white">Exam Schedule</h2>
+            </div>
+            <div className="space-y-3 mb-4">
+              {exams.map((exam, i) => (
+                <motion.div 
+                  key={i} 
+                  className="flex gap-2 items-center"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                >
+                  <input
+                    type="text"
+                    value={exam.name}
+                    onChange={(e) => updateExam(i, 'name', e.target.value)}
+                    placeholder="Exam name"
+                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                  />
+                  <input
+                    type="date"
+                    value={exam.date}
+                    onChange={(e) => updateExam(i, 'date', e.target.value)}
+                    className="bg-white/5 border border-white/10 rounded-xl px-3 py-3 text-white focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                  />
+                  {exams.length > 1 && (
+                    <motion.button 
+                      onClick={() => removeExam(i)} 
+                      className="p-3 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-400 transition-colors"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Trash2 size={18} />
+                    </motion.button>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+            <motion.button 
+              onClick={addExam} 
+              className="flex items-center gap-2 text-purple-400 hover:text-purple-300 text-sm font-medium"
+              whileHover={{ x: 5 }}
+            >
+              <Plus size={16} /> Add Exam
+            </motion.button>
+          </motion.div>
+        </div>
+
+        <motion.button
+          onClick={generatePlan}
+          disabled={loading || !subjects.some(s => s.trim()) || !exams.some(e => e.name && e.date)}
+          className="w-full bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 hover:from-cyan-500 hover:via-blue-500 hover:to-indigo-500 disabled:from-gray-600 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-semibold py-4 rounded-2xl transition-all flex items-center justify-center gap-3 shadow-lg shadow-cyan-500/30"
+          whileHover={{ scale: 1.02, boxShadow: '0 20px 40px rgba(6, 182, 212, 0.4)' }}
+          whileTap={{ scale: 0.98 }}
+        >
+          {loading ? (
+            <>
+              <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}>
+                <Sparkles size={20} />
+              </motion.div>
+              Creating your schedule...
+            </>
+          ) : (
+            <>
+              <Calendar size={20} />
+              Generate Study Plan
+              <ArrowRight size={20} />
+            </>
+          )}
+        </motion.button>
+      </motion.div>
+
+      <AnimatePresence>
+        {schedule && (
+          <motion.div 
+            className="mt-8 glass rounded-3xl p-6 md:p-8 border border-white/10"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+              <div>
+                <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
+                    <Calendar size={20} />
+                  </div>
+                  Your Study Schedule
+                </h2>
+                <p className="text-gray-400 mt-1">{schedule.summary}</p>
+              </div>
+              <motion.button 
+                className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-medium"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Download size={18} />
+                Export Calendar
+              </motion.button>
+            </div>
+            
+            <div className="space-y-3">
+              {schedule.schedule?.slice(0, 14).map((item, i) => (
+                <motion.div 
+                  key={i} 
+                  className="flex flex-col md:flex-row md:items-center gap-3 p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  whileHover={{ scale: 1.01 }}
+                >
+                  <div className={`w-24 h-10 rounded-xl bg-gradient-to-r ${colors[i % colors.length]} flex items-center justify-center flex-shrink-0`}>
+                    <span className="text-sm font-bold text-white">{item.date?.split('-').pop() || 'Day'}</span>
+                  </div>
+                  <div className="flex-1">
+                    <span className="font-bold text-white">{item.subject}</span>
+                    <p className="text-sm text-gray-400">{item.topics}</p>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-400">
+                    <Clock size={14} />
+                    {item.duration}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
