@@ -1,13 +1,13 @@
 import os
 from pypdf import PdfReader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 import google.generativeai as genai
 from config import settings
 
 CHUNK_SIZE = 500
 CHUNK_OVERLAP = 50
 
-embedding_model = genai.get_model("embedding-001")
+genai.configure(api_key=settings.GEMINI_API_KEY)
 
 def extract_text_from_pdf(pdf_path: str) -> str:
     reader = PdfReader(pdf_path)
@@ -25,8 +25,8 @@ def chunk_text(text: str) -> list[str]:
     return splitter.split_text(text)
 
 def get_embedding(text: str) -> list[float]:
-    result = embedding_model.get_embeddings([text])
-    return result[0]["values"]
+    result = genai.embed_content(model="models/text-embedding-004", content=text)
+    return result["embedding"]
 
 def process_document(file_path: str, metadata: dict | None = None) -> list[dict]:
     text = extract_text_from_pdf(file_path)

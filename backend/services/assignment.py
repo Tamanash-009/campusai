@@ -3,7 +3,7 @@ from models.schemas import AssignmentRequest, AssignmentResponse
 from config import settings
 
 genai.configure(api_key=settings.GEMINI_API_KEY)
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("gemini-2.0-flash")
 
 ASSIGNMENT_PROMPT = """You are an Assignment Helper AI for university students. Your goal is to guide students through assignments WITHOUT giving direct answers - you help them LEARN.
 

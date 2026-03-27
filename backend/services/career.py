@@ -3,7 +3,7 @@ from models.schemas import CareerRequest, CareerResponse
 from config import settings
 
 genai.configure(api_key=settings.GEMINI_API_KEY)
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("gemini-2.0-flash")
 
 CAREER_PROMPT = """Provide career guidance for a university student based on their skills and interests.
 
