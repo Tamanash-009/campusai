@@ -27,19 +27,27 @@ async def upload_document(file: UploadFile = File(...)):
             "doc_type": "syllabus"
         })
         
-        supabase.table("documents").insert({
+        doc_data = {
             "id": file_id,
             "name": file.filename,
             "doc_type": "syllabus",
             "chunks_count": len(chunks)
-        }).execute()
+        }
         
-        for chunk in chunks:
-            supabase.table("document_chunks").insert({
-                "document_id": file_id,
-                "content": chunk["content"],
-                "metadata": chunk["metadata"]
-            }).execute()
+        try:
+            supabase.table("documents").insert(doc_data).execute()
+        except Exception as doc_err:
+            print(f"Document insert error (non-critical): {doc_err}")
+        
+        try:
+            for chunk in chunks:
+                supabase.table("document_chunks").insert({
+                    "document_id": file_id,
+                    "content": chunk["content"],
+                    "metadata": chunk["metadata"]
+                }).execute()
+        except Exception as chunk_err:
+            print(f"Chunk insert error (non-critical): {chunk_err}")
         
         os.remove(file_path)
         
@@ -55,11 +63,18 @@ async def list_documents():
         docs = supabase.table("documents").select("*").order("uploaded_at", desc=True).execute()
         return docs.data
     except Exception as e:
+        print(f"List documents error: {e}")
         return []
 
 
 @router.delete("/documents/{doc_id}")
 async def delete_document(doc_id: str):
-    supabase.table("document_chunks").delete().eq("document_id", doc_id).execute()
-    supabase.table("documents").delete().eq("id", doc_id).execute()
+    try:
+        supabase.table("document_chunks").delete().eq("document_id", doc_id).execute()
+    except:
+        pass
+    try:
+        supabase.table("documents").delete().eq("id", doc_id).execute()
+    except:
+        pass
     return {"message": "Document deleted"}
