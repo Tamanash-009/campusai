@@ -11,4 +11,4 @@ services:
       - key: SUPABASE_URL
         value: https://spbwfqhuyocfgddzafse.supabase.co
       - key: SUPABASE_KEY
-        sync: false
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNwYndmcWh1eW9jZmdkZHphZnNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MzQ5MTksImV4cCI6MjA5MDIxMDkxOX0.v9oUW1DPIRTJg-6VbNlNRu5XOau9Fnl-UciLmUvxkEw
