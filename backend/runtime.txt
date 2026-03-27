@@ -1,0 +1,3 @@
+# Keep this file in sync with requirements.txt
+# This is for Render's Python version detection
+runtime = python311

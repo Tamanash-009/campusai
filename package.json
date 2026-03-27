@@ -1,0 +1,13 @@
+{
+  "name": "campusai",
+  "version": "1.0.0",
+  "description": "AI-powered Smart Campus Assistant for Brainware University",
+  "scripts": {
+    "dev": "cd backend && uvicorn main:app --reload --port 8000",
+    "build": "cd frontend && npm run build",
+    "start": "cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT"
+  },
+  "keywords": ["ai", "campus", "education", "fastapi", "react"],
+  "author": "",
+  "license": "MIT"
+}
