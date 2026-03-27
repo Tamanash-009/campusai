@@ -8,8 +8,6 @@ import uuid
 router = APIRouter()
 supabase: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
 
-VECTOR_DIM = 768
-
 
 @router.post("/upload")
 async def upload_document(file: UploadFile = File(...)):
@@ -24,12 +22,12 @@ async def upload_document(file: UploadFile = File(...)):
         f.write(content)
     
     try:
-        chunks = await process_document(file_path, {
+        chunks = process_document(file_path, {
             "source": file.filename,
             "doc_type": "syllabus"
         })
         
-        doc_result = supabase.table("documents").insert({
+        supabase.table("documents").insert({
             "id": file_id,
             "name": file.filename,
             "doc_type": "syllabus",
